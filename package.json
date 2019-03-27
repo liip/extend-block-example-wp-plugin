@@ -1,0 +1,19 @@
+{
+	"name": "extend-block-example",
+	"version": "1.0.0",
+	"description": "Example how to extend an existing Gutenberg block",
+	"scripts": {
+		"start": "parcel watch --no-hmr assets/js/extend-block-example.js -d dist",
+		"build": "parcel build assets/js/extend-block-example.js -d dist"
+	},
+	"author": "Team Jazz, Liip AG",
+	"dependencies": {
+		"lodash.assign": "^4.2.0"
+	},
+	"devDependencies": {
+		"babel-core": "^6.26.3",
+		"babel-plugin-transform-react-jsx": "^6.24.1",
+		"parcel-bundler": "^1.11.0"
+	},
+	"private": true
+}
