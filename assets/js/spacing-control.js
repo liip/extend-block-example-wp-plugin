@@ -12,6 +12,7 @@ const enableSpacingControlOnBlocks = [
 	'core/image',
 ];
 
+// Available spacing control options
 const spacingControlOptions = [
 	{
 		label: __( 'None' ),
@@ -40,6 +41,7 @@ const spacingControlOptions = [
  * @returns {object} Modified block settings.
  */
 const addSpacingControlAttribute = ( settings, name ) => {
+	// Do nothing if it's another block than our defined ones.
 	if ( ! enableSpacingControlOnBlocks.includes( name ) ) {
 		return settings;
 	}
@@ -62,6 +64,7 @@ addFilter( 'blocks.registerBlockType', 'extend-block-example/attribute/spacing',
  */
 const withSpacingControl = createHigherOrderComponent( ( BlockEdit ) => {
 	return ( props ) => {
+		// Do nothing if it's another block than our defined ones.
 		if ( ! enableSpacingControlOnBlocks.includes( props.name ) ) {
 			return (
 				<BlockEdit { ...props } />
@@ -107,6 +110,7 @@ addFilter( 'editor.BlockEdit', 'extend-block-example/with-spacing-control', with
  * @returns {object} Modified props of save element.
  */
 const addSpacingExtraProps = ( saveElementProps, blockType, attributes ) => {
+	// Do nothing if it's another block than our defined ones.
 	if ( ! enableSpacingControlOnBlocks.includes( blockType.name ) ) {
 		return saveElementProps;
 	}
