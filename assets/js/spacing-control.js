@@ -1,4 +1,4 @@
-import { assign } from 'lodash';
+import assign from 'lodash.assign';
 
 const { createHigherOrderComponent } = wp.compose;
 const { Fragment } = wp.element;
@@ -10,7 +10,7 @@ const { __ } = wp.i18n;
 // Enable spacing control on the following blocks
 const enableSpacingControlOnBlocks = [
 	'core/image',
-]
+];
 
 const spacingControlOptions = [
 	{
@@ -37,7 +37,7 @@ const spacingControlOptions = [
  * @param {object} settings Current block settings.
  * @param {string} name Name of block.
  *
- * @returns {object}
+ * @returns {object} Modified block settings.
  */
 const addSpacingControlAttribute = ( settings, name ) => {
 	if ( ! enableSpacingControlOnBlocks.includes( name ) ) {
@@ -48,12 +48,12 @@ const addSpacingControlAttribute = ( settings, name ) => {
 	settings.attributes = assign( settings.attributes, {
 		spacing: {
 			type: 'string',
-			default: spacingControlOptions[0].value,
+			default: spacingControlOptions[ 0 ].value,
 		},
 	} );
 
 	return settings;
-}
+};
 
 addFilter( 'blocks.registerBlockType', 'extend-block-example/attribute/spacing', addSpacingControlAttribute );
 
@@ -104,7 +104,7 @@ addFilter( 'editor.BlockEdit', 'extend-block-example/with-spacing-control', with
  * @param {Object} blockType Block type information.
  * @param {Object} attributes Attributes of block.
  *
- * @returns {object}
+ * @returns {object} Modified props of save element.
  */
 const addSpacingExtraProps = ( saveElementProps, blockType, attributes ) => {
 	if ( ! enableSpacingControlOnBlocks.includes( blockType.name ) ) {
@@ -117,12 +117,12 @@ const addSpacingExtraProps = ( saveElementProps, blockType, attributes ) => {
 		large: '30px',
 	};
 
-	if( attributes.spacing in margins ) {
+	if ( attributes.spacing in margins ) {
 		// Use Lodash's assign to gracefully handle if attributes are undefined
-		lodash.assign( saveElementProps, { style: { 'margin-bottom': margins[ attributes.spacing ] } } );
+		assign( saveElementProps, { style: { 'margin-bottom': margins[ attributes.spacing ] } } );
 	}
 
 	return saveElementProps;
-}
+};
 
 addFilter( 'blocks.getSaveContent.extraProps', 'extend-block-example/get-save-content/extra-props', addSpacingExtraProps );
