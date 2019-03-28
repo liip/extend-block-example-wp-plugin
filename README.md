@@ -1,5 +1,9 @@
 # Example how to extend an existing Gutenberg block in WordPress
 
+This is a WordPress plugin which shows how to extend an existing Gutenberg block.
+This blog post explains how it works: https://www.liip.ch/en/blog/how-to-extend-existing-gutenberg-blocks-in-wordpress.
+Feel free to use this plugin as a starting point to extend Gutenberg blocks in your WordPress site.
+
 ## Developer information
 
 ### Installation
