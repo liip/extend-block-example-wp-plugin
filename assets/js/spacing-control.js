@@ -73,6 +73,13 @@ const withSpacingControl = createHigherOrderComponent( ( BlockEdit ) => {
 
 		const { spacing } = props.attributes;
 
+		// add has-spacing-xy class to block
+		if ( spacing ) {
+			props.setAttributes( {
+				className: `has-spacing-${ spacing }`,
+			} );
+		}
+
 		return (
 			<Fragment>
 				<BlockEdit { ...props } />
