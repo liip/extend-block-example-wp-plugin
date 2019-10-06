@@ -71,12 +71,19 @@ const withSpacingControl = createHigherOrderComponent( ( BlockEdit ) => {
 			);
 		}
 
-		const { spacing } = props.attributes;
+		const { className, spacing } = props.attributes;
 
-		// add has-spacing-xy class to block
-		if ( spacing ) {
-			props.attributes.className = `has-spacing-${ spacing }`;
-		}
+		// Filter out spacing css classes to preserve other additional classes
+		const classNameWithoutSpacing = className.split(' ')
+				.filter(classString => !['has-spacing-small', 'has-spacing-medium', 'has-spacing-large'].includes(classString))
+				.join(' ')
+				.replace(/\s+/g,' ') // Remove superfluous whitespace
+				.trim();
+
+		// Add has-spacing-xy class to block
+		props.attributes.className = spacing
+			? `has-spacing-${ spacing } ${ classNameWithoutSpacing }`
+			: classNameWithoutSpacing;
 
 		return (
 			<Fragment>
