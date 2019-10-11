@@ -65,7 +65,6 @@ addFilter( 'blocks.registerBlockType', 'extend-block-example/attribute/spacing',
 
 // Filter out spacing css classes to preserve other additional classes
 const removeFromClassName = ( className, classArray ) => {
-	console.log( 'AAAAA', className || '' );
 	return ( className || '' ).split( ' ' )
 		.filter( classString => ! classArray.includes( classString ) )
 		.join( ' ' )
