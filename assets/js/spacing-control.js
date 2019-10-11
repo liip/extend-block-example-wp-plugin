@@ -48,7 +48,11 @@ const addSpacingControlAttribute = ( settings, name ) => {
 
 	// Use Lodash's assign to gracefully handle if attributes are undefined
 	settings.attributes = assign( settings.attributes, {
-		spacing: {
+		spacingTop: {
+			type: 'string',
+			default: spacingControlOptions[ 0 ].value,
+		},
+		spacingBottom: {
 			type: 'string',
 			default: spacingControlOptions[ 0 ].value,
 		},
@@ -58,6 +62,16 @@ const addSpacingControlAttribute = ( settings, name ) => {
 };
 
 addFilter( 'blocks.registerBlockType', 'extend-block-example/attribute/spacing', addSpacingControlAttribute );
+
+// Filter out spacing css classes to preserve other additional classes
+const removeFromClassName = ( className, classArray ) => {
+	console.log( 'AAAAA', className || '' );
+	return ( className || '' ).split( ' ' )
+		.filter( classString => ! classArray.includes( classString ) )
+		.join( ' ' )
+		.replace( /\s+/g, ' ' ) // Remove superfluous whitespace
+		.trim();
+};
 
 /**
  * Create HOC to add spacing control to inspector controls of block.
@@ -71,35 +85,54 @@ const withSpacingControl = createHigherOrderComponent( ( BlockEdit ) => {
 			);
 		}
 
-		const { className, spacing } = props.attributes;
+		const { className, spacingTop, spacingBottom } = props.attributes;
 
-		// Filter out spacing css classes to preserve other additional classes
-		const classNameWithoutSpacing = className.split(' ')
-				.filter(classString => !['has-spacing-small', 'has-spacing-medium', 'has-spacing-large'].includes(classString))
-				.join(' ')
-				.replace(/\s+/g,' ') // Remove superfluous whitespace
-				.trim();
+		const spacings = [
+			{
+				name: 'top',
+				value: spacingTop,
+				classes: [ 'has-spacing-top-small', 'has-spacing-top-medium', 'has-spacing-top-large' ],
+			},
+			{
+				name: 'bottom',
+				value: spacingBottom,
+				classes: [ 'has-spacing-bottom-small', 'has-spacing-bottom-medium', 'has-spacing-bottom-large' ],
+			},
+		];
 
-		// Add has-spacing-xy class to block
-		props.attributes.className = spacing
-			? `has-spacing-${ spacing } ${ classNameWithoutSpacing }`
-			: classNameWithoutSpacing;
+		spacings.map( spacing => {
+			const classNameWithoutSpacing = removeFromClassName( className, spacing.classes );
+			// Add has-spacing-xy class to block
+			props.attributes.className = spacing.value ?
+				`has-spacing-${ spacing.name }-${ spacing.value } ${ classNameWithoutSpacing }` :
+				classNameWithoutSpacing;
+		} );
 
 		return (
 			<Fragment>
 				<BlockEdit { ...props } />
 				<InspectorControls>
 					<PanelBody
-						title={ __( 'My Spacing Control' ) }
+						title={ __( 'My Spacing Controls' ) }
 						initialOpen={ true }
 					>
 						<SelectControl
-							label={ __( 'Spacing' ) }
-							value={ spacing }
+							label={ __( 'Spacing Top' ) }
+							value={ spacingTop }
 							options={ spacingControlOptions }
 							onChange={ ( selectedSpacingOption ) => {
 								props.setAttributes( {
-									spacing: selectedSpacingOption,
+									spacingTop: selectedSpacingOption,
+								} );
+							} }
+						/>
+						<SelectControl
+							label={ __( 'Spacing Bottom' ) }
+							value={ spacingBottom }
+							options={ spacingControlOptions }
+							onChange={ ( selectedSpacingOption ) => {
+								props.setAttributes( {
+									spacingBottom: selectedSpacingOption,
 								} );
 							} }
 						/>
@@ -133,9 +166,13 @@ const addSpacingExtraProps = ( saveElementProps, blockType, attributes ) => {
 		large: '30px',
 	};
 
-	if ( attributes.spacing in margins ) {
+	if ( attributes.spacingTop in margins ) {
 		// Use Lodash's assign to gracefully handle if attributes are undefined
-		assign( saveElementProps, { style: { 'margin-bottom': margins[ attributes.spacing ] } } );
+		assign( saveElementProps, { style: { 'margin-top': margins[ attributes.spacingTop ], 'margin-bottom': saveElementProps.style ? saveElementProps.style[ 'margin-top' ] : '' } } );
+	}
+	if ( attributes.spacingBottom in margins ) {
+		// Use Lodash's assign to gracefully handle if attributes are undefined
+		assign( saveElementProps, { style: { 'margin-top': saveElementProps.style ? saveElementProps.style[ 'margin-top' ] : '', 'margin-bottom': margins[ attributes.spacingBottom ] } } );
 	}
 
 	return saveElementProps;
